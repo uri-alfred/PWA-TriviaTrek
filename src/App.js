@@ -8,7 +8,7 @@ import Home from './components/Home/Home';
 import Quiz from './components/Quiz/Quiz';
 import Login from './components/Login/Login';
 import Registro from './components/Registro/Registro';
-import  Plantilla  from './Plantilla';
+import  Plantilla  from './Plantilla2';
 
 function App() {
   return (
