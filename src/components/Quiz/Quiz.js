@@ -1,59 +1,102 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Radio, Space, Button } from 'antd';
+import { Radio, Space, Button, Flex, Progress } from 'antd';
 import { Card } from 'antd';
 import logo from '../../img/Francia.jpg';
 import preguntas  from './Preguntas';
 
 
+
 export default function Quiz() {
-
-
-  const { Meta } = Card;
-
   
-  const [value, setValue] = useState(1);
-  const onChange = (e) => {
-    setValue(e.target.value);
+  const [pregunta1, setPregunta1] = useState(false);
+  const [pregunta2, setPregunta2] = useState(false);
+  const [pregunta3, setPregunta3] = useState(false);
+  const [pregunta4, setPregunta4] = useState(false);
+  const [respuestaSeleccionada, setRespuestaSeleccionada] = useState();
+  const [arrayRespuestas, setArrayRespuestas] = useState([]);
+
+  const seleccionadoRespuesta = (respuesta, numero) => {
+    setPregunta1(numero === 1);
+    setPregunta2(numero === 2);
+    setPregunta3(numero === 3);
+    setPregunta4(numero === 4);
+
+    console.log("respuesta seleccionada", respuesta);
+    setRespuestaSeleccionada(respuesta);
   };
+
+  const guardarRespuesta = () => {
+    console.log('Respuesta guardada:', respuestaSeleccionada);
+    setArrayRespuestas(prevArray => [...prevArray, respuestaSeleccionada]);
+
+    console.log('Array de respuestas 1:', arrayRespuestas);
+  };
+
+ async function verRespuestas () {
+    await console.log('Array de respuestas 2:', arrayRespuestas);
+  }
+  
+  useEffect(() => {
+    guardarRespuesta();
+  }, [respuestaSeleccionada]);
 
   const [indicePregunta, setIndicePregunta] = useState(0);
   const [loading, setLoading] = useState(false);
-
-  let indice = 0;
+  const [contador, setContador] = useState(0);
+  const [tiempoAsignadoU, setTiempoAsignadoU] = useState();
 
   useEffect(() => {
-    console.log('JEJEJE ', preguntas[0]?.respuestas[0]); // Usando el operador de opcionalidad (?.)
-    const intervalId = setInterval(() => {
-      console.log('Cambio de pregunta: ', preguntas[indice]);
-      setIndicePregunta(preguntas[indice]);
-      setLoading(true);
-      if (indice === 8) {
-        indice = 0;
-      }
-      indice++;
-    }, 4000);
-  
-    return () => clearInterval(intervalId);
-  }, []);
-  
+    let indice = 0;
+    let tiempoAsignado = 40;
+    let tiempoTranscurrido = 0;
 
-  let tituloPregunta = indicePregunta.pregunta;
+    setTiempoAsignadoU(tiempoAsignado);
+  
+    const intervalId = setInterval(() => {
+      tiempoTranscurrido++;
+      setContador(tiempoTranscurrido);
+
+      //console.log('Tiempo transcurrido: ', tiempoTranscurrido);
+
+      if (tiempoTranscurrido >= tiempoAsignado) {
+        //console.log('Se ha cumplido el tiempo');
+        tiempoTranscurrido = 0;
+        setIndicePregunta(preguntas[indice]);
+        setLoading(true);
+        verRespuestas()
+        setPregunta1(false);
+        setPregunta2(false);
+        setPregunta3(false);
+        setPregunta4(false);
+
+        if (indice === 8) {
+          indice = 0;
+        }
+        indice++;
+      } else {
+        //console.log('No se ha cumplido el tiempo');
+      }
+    }, 1000); // Intervalo de 1 segundo
+  
+    return () => clearInterval(intervalId); // Limpieza del intervalo
+  }, []);
+
+
+
+  let tituloPregunta = indicePregunta.pregunta ? indicePregunta.pregunta : preguntas[0].pregunta;
   let respuesta1 = indicePregunta.respuestas ? indicePregunta.respuestas[0].respuesta1 : preguntas[0].respuestas[0].respuesta1;
   let respuesta2 = indicePregunta.respuestas ? indicePregunta.respuestas[1].respuesta2 : preguntas[0].respuestas[1].respuesta2;
   let respuesta3 = indicePregunta.respuestas ? indicePregunta.respuestas[2].respuesta3 : preguntas[0].respuestas[2].respuesta3;
   let respuesta4 = indicePregunta.respuestas ? indicePregunta.respuestas[3].respuesta4 : preguntas[0].respuestas[3].respuesta4;
   
-   
-  console.log('respuesta1: ', respuesta1);
-  console.log('respuesta2: ', respuesta2);
-  console.log('respuesta3: ', respuesta3);
-  console.log('respuesta4: ', respuesta4);
 
   return (
     <>
-    {loading == true ? 
-     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-      <h1 style={{ color: '#124076' }}>Pregunta 1:</h1>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+      <Flex gap="small" wrap="wrap">
+        <Progress type="circle" percent={(contador / tiempoAsignadoU) * 100} format={() => `${contador}`} />
+      </Flex>
+      <h1 style={{ color: '#124076' }}> Pregunta 1:</h1>
       <Card
         hoverable
         style={{
@@ -75,24 +118,24 @@ export default function Quiz() {
       
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '90%', maxWidth: '600px', marginBottom: '20px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '50%', paddingRight: '10px' }}>
-        <Button type="primary" danger style={{ marginBottom: '20px', width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word' }}>
+        <Button type="primary" danger disabled={pregunta1} onClick={() => seleccionadoRespuesta(respuesta1,1)} style={{ marginBottom: '20px', width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word' }}>
           {respuesta1}
         </Button>
-        <Button type="primary" danger style={{ width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word' }}>
+        <Button type="primary" danger disabled={pregunta2} onClick={() => seleccionadoRespuesta(respuesta2,2)} style={{ width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word' }}>
           {respuesta2}
         </Button>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '50%', paddingLeft: '10px' }}>
-        <Button type="primary" danger style={{ marginBottom: '20px', width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word' }}>
+        <Button type="primary" danger disabled={pregunta3} onClick={() => seleccionadoRespuesta(respuesta3,3)} style={{ marginBottom: '20px', width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word' }}>
           {respuesta3}
         </Button>
-        <Button type="primary" danger style={{ width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word' }}>
+        <Button type="primary" danger disabled={pregunta4} onClick={() => seleccionadoRespuesta(respuesta4,4)} style={{ width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word' }}>
           {respuesta4}
         </Button>
       </div>
     </div>
     
-    </div> : <h1>Cargando...</h1>}
+    </div>
     
     </>
   )
