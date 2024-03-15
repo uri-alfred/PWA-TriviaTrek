@@ -3,6 +3,9 @@ import { Radio, Space, Button, Flex, Progress } from 'antd';
 import { Card } from 'antd';
 import logo from '../../img/Francia.jpg';
 import preguntas  from './Preguntas';
+import LoadingInicio from '../../componentAnimation/IntroLoad';
+
+
 
 
 
@@ -40,59 +43,87 @@ export default function Quiz() {
     guardarRespuesta();
   }, [respuestaSeleccionada]);
 
-  const [indicePregunta, setIndicePregunta] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const [contador, setContador] = useState(0);
   const [tiempoAsignadoU, setTiempoAsignadoU] = useState();
 
+  const [start, setStart] = useState(false);
+
+  const [tituloPregunta, setTituloPregunta] = useState();
+  const [respuesta1 , setRespuesta1] = useState(  "cargando..." );
+  const [respuesta2 , setRespuesta2] = useState(  "cargando..." );
+  const [respuesta3 , setRespuesta3] = useState(  "cargando..." );
+  const [respuesta4 , setRespuesta4] = useState(  "cargando..." );
+
+
   useEffect(() => {
+   
     let indice = 0;
     let tiempoAsignado = 40;
     let tiempoTranscurrido = 0;
 
     setTiempoAsignadoU(tiempoAsignado);
-  
-    const intervalId = setInterval(() => {
-      tiempoTranscurrido++;
-      setContador(tiempoTranscurrido);
+    
+    if(start){
+      setLoading(true);
+      console.log('Inicia el juego');
+      const intervalId = setInterval(() => {
+        tiempoTranscurrido++;
+        setContador(tiempoTranscurrido);
+        setTituloPregunta(preguntas[indice].pregunta);
+        setRespuesta1(preguntas[indice].respuestas[0].respuesta1);
+        setRespuesta2(preguntas[indice].respuestas[1].respuesta2);
+        setRespuesta3(preguntas[indice].respuestas[2].respuesta3);
+        setRespuesta4(preguntas[indice].respuestas[3].respuesta4);
 
-      //console.log('Tiempo transcurrido: ', tiempoTranscurrido);
 
-      if (tiempoTranscurrido >= tiempoAsignado) {
-        //console.log('Se ha cumplido el tiempo');
-        tiempoTranscurrido = 0;
-        setIndicePregunta(preguntas[indice]);
-        setLoading(true);
-        verRespuestas()
-        setPregunta1(false);
-        setPregunta2(false);
-        setPregunta3(false);
-        setPregunta4(false);
+        if (tiempoTranscurrido >= tiempoAsignado) {
+          //console.log('Se ha cumplido el tiempo');
+          tiempoTranscurrido = 0;
+          setPregunta1(false);
+          setPregunta2(false);
+          setPregunta3(false);
+          setPregunta4(false);
 
-        if (indice === 8) {
-          indice = 0;
+          if (indice === 8) {
+            indice = 0;
+          }
+          indice++;
         }
-        indice++;
-      } else {
-        //console.log('No se ha cumplido el tiempo');
-      }
-    }, 1000); // Intervalo de 1 segundo
+      }, 1000); // Intervalo de 1 segundo
   
-    return () => clearInterval(intervalId); // Limpieza del intervalo
-  }, []);
+      return () => clearInterval(intervalId); // Limpieza del intervalo
+    }
+    else{
+      setLoading(false);
+      console.log('Aun no inicia el juego');
+    }
+    
 
+  }, [start]);
 
-
-  let tituloPregunta = indicePregunta.pregunta ? indicePregunta.pregunta : preguntas[0].pregunta;
-  let respuesta1 = indicePregunta.respuestas ? indicePregunta.respuestas[0].respuesta1 : preguntas[0].respuestas[0].respuesta1;
-  let respuesta2 = indicePregunta.respuestas ? indicePregunta.respuestas[1].respuesta2 : preguntas[0].respuestas[1].respuesta2;
-  let respuesta3 = indicePregunta.respuestas ? indicePregunta.respuestas[2].respuesta3 : preguntas[0].respuestas[2].respuesta3;
-  let respuesta4 = indicePregunta.respuestas ? indicePregunta.respuestas[3].respuesta4 : preguntas[0].respuestas[3].respuesta4;
   
+
+
+  
+
+
+
+  
+
+  // let tituloPregunta = indicePregunta.pregunta ? indicePregunta.pregunta : preguntas[0].pregunta;
+  // let respuesta1 = indicePregunta.respuestas ? indicePregunta.respuestas[0].respuesta1 : preguntas[0].respuestas[0].respuesta1;
+  // let respuesta2 = indicePregunta.respuestas ? indicePregunta.respuestas[1].respuesta2 : preguntas[0].respuestas[1].respuesta2;
+  // let respuesta3 = indicePregunta.respuestas ? indicePregunta.respuestas[2].respuesta3 : preguntas[0].respuestas[2].respuesta3;
+  // let respuesta4 = indicePregunta.respuestas ? indicePregunta.respuestas[3].respuesta4 : preguntas[0].respuestas[3].respuesta4;
+  
+
 
   return (
     <>
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+    {loading ? 
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
       <Flex gap="small" wrap="wrap">
         <Progress type="circle" percent={(contador / tiempoAsignadoU) * 100} format={() => `${contador}`} />
       </Flex>
@@ -112,6 +143,7 @@ export default function Quiz() {
       >
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
           <img alt="example" src={logo} style={{ width: '200px', height: 'auto' }} /> {/* Ancho del 100% y altura automática */}
+          
         </div>
         <h3 style={{ wordWrap: 'break-word', color: 'white', textAlign: 'center' }}>{tituloPregunta}</h3> {/* Alineación del texto al centro y máximo de ancho */}
       </Card>
@@ -134,8 +166,14 @@ export default function Quiz() {
         </Button>
       </div>
     </div>
-    
+        
+    </div> :
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', paddingTop: '20px' }}>
+      <LoadingInicio />
+      <Button style={{ marginTop: '20px' }} type="primary" onClick={() => setStart(true)}>¡Click para jugar!</Button>
     </div>
+    }
+    
     
     </>
   )

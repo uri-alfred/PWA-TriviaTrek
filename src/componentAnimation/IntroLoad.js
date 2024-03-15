@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Lottie from "react-lottie";
-import animationData from "../../src/assets/AnikiHamster.json"; // Asegúrate de que la ruta sea correcta
+import animationData from "../../src/assets/IntroLoad.json"; // Asegúrate de que la ruta sea correcta
 
-export default class LoadingLogin extends Component {
+export default class IntroLoad extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,8 +31,8 @@ export default class LoadingLogin extends Component {
         <Lottie
           ref={this.animation}
           options={defaultOptions}
-          height={180}
-          width="100%"
+          height={200}
+          width={200}
           isStopped={this.state.isStopped}
           isPaused={this.state.isPaused}
         />
