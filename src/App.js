@@ -9,6 +9,7 @@ import Quiz from './components/Quiz/Quiz';
 import Login from './components/Login/Login';
 import Registro from './components/Registro/Registro';
 
+
 function App() {
   return (
     <AuthProvider>
