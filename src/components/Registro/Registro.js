@@ -1,6 +1,7 @@
 ﻿import React, {createRef, useState} from 'react';
 import '../../App.css';
 import {Form, Input, Button, Col, Row, Radio, DatePicker, Select, Typography } from 'antd';
+import { Route, Routes } from 'react-router-dom';
 
 import { StyleProvider } from '@ant-design/cssinjs';
 import local from 'antd/es/date-picker/locale/es_ES';
@@ -80,9 +81,9 @@ export default function Registro() {
           <Col xs={1} sm={2} md={6} lg={7}></Col>
           <Col xs={22} sm={20} md={12} lg={10} className='contenedorRegistro'>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop:'10px', paddingBottom:'20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop:'10px', paddingBottom:'20px' }}>
 
-            <Text style={{textAlign: 'center', fontSize: 30, fontWeight: 'bold'}}>Registro de Usuario</Text>
+              <Text style={{textAlign: 'center', fontSize: 30, fontWeight: 'bold'}}>Registro de Usuario</Text>
             </div>
           
             <Form name= "formulario" initialValues={{
@@ -125,28 +126,35 @@ export default function Registro() {
               >
                 <Password/>
               </Item>
+              <Item
+                label="Repetir Contraseña"
+                name="contrasenia"
+                rules={[{
+                  required: true,
+                  message: "Por favor ingrese su contraseña",
+                }]}
+              >
+                <Password/>
+              </Item>
               
 
-              <Item 
-                label="Fecha de nacimiento"
-                name="fecha"
-              >
-                <DatePicker style={{width:'100%'}} locale={local}/>
-
-              </Item>
-
-              <Item
-                label="Teléfono"
-                name="telefono"
-              >
-                <Input addonBefore={prefixSelector} style={{width:'100%'}} maxLength={10}/>
-              </Item>
+              
 
               <Item style={{textAlign: 'center'}}>
                 <Button type="primary" htmlType="submit">Registrar Usuario</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button htmlType="button" onClick={borrarCampos}>Borrar Campos</Button>
               </Item>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop:'10px' }}>
+                <Button type="link" href="/">Regresar al inicio</Button>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom:'20px' }}>
+                <Button type="link" href="/inicioSession">Iniciar Sesion</Button>
+                
+              </div>
+
+              
 
             </Form>
 
