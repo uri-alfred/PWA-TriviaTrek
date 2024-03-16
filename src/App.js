@@ -10,6 +10,7 @@ import Login from './components/Login/Login';
 import Registro from './components/Registro/Registro';
 import  Layout  from './Layout';
 
+
 function App() {
   return (
     <AuthProvider>
