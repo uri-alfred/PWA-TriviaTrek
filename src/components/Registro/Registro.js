@@ -99,40 +99,61 @@ export default function Registro() {
                 name="username"
                 rules={[{
                   required: true,
-                  message: "Por favor ingrese su usuario",
+                  message: "Por favor ingrese su usuario!",
                 }]}
               >
                 <Input/>
               </Item>
               <Item
-                label="Correo"
                 name="email"
-                rules={[{
-                  required: true,
-                  message: "Por favor ingrese su correo",
-                }]}
+                label="Correo"
+                rules={[
+                  {
+                    type: 'email',
+                    message: 'Por favor ingresa un correo valido!',
+                  },
+                  {
+                    required: true,
+                    message: 'Por favor ingresa un correo!',
+                  },
+                ]}
               >
                 <Input/>
               </Item>
               
           
               <Item
+                name="password"
                 label="Contraseña"
-                name="contrasenia"
-                rules={[{
-                  required: true,
-                  message: "Por favor ingrese su contraseña",
-                }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Por favor ingresa una contraseña!',
+                  },
+                ]}
+                hasFeedback
               >
                 <Password/>
               </Item>
               <Item
-                label="Repetir Contraseña"
-                name="contrasenia"
-                rules={[{
-                  required: true,
-                  message: "Por favor ingrese su contraseña",
-                }]}
+                name="confirm"
+                label="Confirma tu contraseña"
+                dependencies={['password']}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Por favor ingresa la confirmacion de tu contraseña!',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('La contraseña no coincide!'));
+                    },
+                  }),
+                ]}
               >
                 <Password/>
               </Item>
