@@ -44,8 +44,19 @@ self.addEventListener('install', event => {
             'https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js',
         ])
     })
-    event.waitUntil(Promise.all([cahePromise, caheInmutable]))
-})
+
+    const instalacion = new Promise((resolve, reject)=> {
+        // Simular la instalación de caches
+        setTimeout(() => {
+            //console.log('Instalación terminada')
+            // para que se actualice y recargue por si sola
+            self.skipWaiting()
+            resolve()
+        }, 1000)
+    });
+    
+    event.waitUntil(Promise.all([cahePromise, caheInmutable, instalacion]))
+});
 
 //Proceso de activacion
 self.addEventListener('activate', event => {

@@ -1,6 +1,7 @@
-﻿import React, { useState } from 'react';
-import { Alert, Button, Form, Input, Typography } from 'antd';
-import {useAuth} from '../../context/authContext';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button, Col, Form, Image, Input, Row, Typography } from 'antd';
+import { useAuth } from '../../context/authContext';
+import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
 
@@ -8,15 +9,16 @@ export default function Login() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
-  const {login} = useAuth();
+  const { login, user } = useAuth();
+  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
     setError("");
     try {
-      await login(values.correo,values.contraseña)
-    }
-    catch (error){
+      await login(values.correo, values.contraseña);
+      form.resetFields();
+    } catch (error) {
       switch (error.code) {
         case "auth/user-not-found":
           setError("No existe un usuario con ese correo.");
@@ -25,94 +27,119 @@ export default function Login() {
           setError("Se requiere ingresar un correo.");
           break;
         case "auth/wrong-password":
-          setError("La contraseña es invalida.");
+          setError("Usuario o contraseña incorrectas. Intentelo de nuevo.");
           break;
         case "auth/internal-error":
           setError("Se requiere ingresar una contraseña.");
           break;
+        case "auth/invalid-credential":
+          setError("Usuario o contraseña incorrectas. Intentelo de nuevo.");
+          break;
+        case "auth/network-request-failed":
+          setError("Error de conexión. Intentelo de nuevo más tarde.");
+          break;
 
         default:
           setError(error.message);
-          break;
-      }
+          break;
+      }
     }
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1000);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
 
+  useEffect(() => {
+    // Esta función se ejecutará cada vez que user cambie
+    if (user !== null) {
+      // Si user tiene un valor, navegar a la ruta "/"
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100vh', paddingTop: '50px', backgroundColor: '#f0f2f5' }}>
-      <div style={{ maxWidth: 650, width: '100%', padding: 90, paddingTop: 10, paddingBottom: 35, border: '1px solid #ccc', borderRadius: 5, backgroundColor: '#fff' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: 20, fontSize: '30px' }}>Inicia Sesión</h2>
-        {error &&
-        <div>
-        <Alert message="Error Text" type="error" />
+    <div className='full-screen-background' >
+      <div >
         <br />
-        </div>
-        }
-        <Form
-          form={form}
-          name="login"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-          layout="vertical"
-          style={{ marginTop: '-5px' }} // Ajuste para mover el formulario hacia arriba
-        >
-          <Form.Item
-            label="Correo"
-            name="correo"
-            rules={[
-              {
-                required: true,
-                message: 'Por favor ingresa tu correo',
-              },
-              {
-                type: 'email',
-                message: 'Ingresa un correo electrónico válido',
-              },
-            ]}
-            style={{ marginBottom: '15px' }} // Ajuste para agregar margen inferior al campo
-          >
-            <Input style={{ width: '100%' }} />
-          </Form.Item>
+        <Row>
+          <Col xs={1} sm={2} md={6} lg={7}></Col>
+          <Col xs={22} sm={20} md={12} lg={10} className='contenedorRegistro'>
 
-          <Form.Item
-            label="Contraseña"
-            name="contraseña"
-            rules={[
-              {
-                required: true,
-                message: 'Por favor ingresa tu contraseña',
-              },
-            ]}
-            style={{ marginBottom: '30px' }} // Ajuste para agregar margen inferior al campo
-          >
-            <Input.Password style={{ width: '100%' }} />
-          </Form.Item>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <Image src='Logo.png' preview={false} />
+          </div>
 
-          <Form.Item style={{ marginBottom: '20px' }}> {/* Asegúrate de tener un elemento secundario aquí */}
-            <Button type="primary" htmlType="submit" loading={loading} style={{ width: '50%', left: '25%' }}>
-              Iniciar Sesión
-            </Button>
-          </Form.Item>
-        </Form>
-        <div style={{ textAlign: 'center', marginTop: 20 }}>
-          <Text>¿No tienes una cuenta?</Text>{' '}
-          <a href="/registro">Regístrate aquí</a>
-        </div>
-        <div style={{ textAlign: 'center', marginTop: 20 }}>
-          <Button type="link" href="/">Ir a inicio</Button>
-        </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '10px', paddingBottom: '20px' }}>
+              <Text style={{ textAlign: 'center', fontSize: 30, fontWeight: 'bold' }}>Inicia Sesión</Text>
+            </div>
+
+            {error &&
+              <div>
+                <Alert message={error} type="error" />
+                <br />
+              </div>
+            }
+
+            <Form
+              form={form}
+              name="login"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+              layout="vertical"
+            >
+              <Form.Item
+                label="Correo"
+                name="correo"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Por favor ingresa tu correo',
+                  },
+                  {
+                    type: 'email',
+                    message: 'Ingresa un correo electrónico válido',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+
+
+              <Form.Item
+                label="Contraseña"
+                name="contraseña"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Por favor ingresa tu contraseña',
+                  },
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item style={{ textAlign: 'center' }}>
+                <Button className='btn-orange' type="primary" htmlType="submit" loading={loading}>Iniciar Sesión</Button>
+              </Form.Item>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '10px' }}>
+                ¿No tienes una cuenta?<Button type="link" href="/registro">Regístrate aquí</Button>
+              </div>
+
+            </Form>
+          </Col>
+          <Col xs={22} sm={20} md={12} lg={10}></Col>
+        </Row>
       </div>
     </div>
+
   );
 }
