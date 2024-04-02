@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Radio, Space, Button, Flex, Progress } from 'antd';
 import { Card } from 'antd';
 import logo from '../../img/Francia.jpg';
