@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Col, Row, Avatar, List, Image, Button } from 'antd';
 import juego from '../../img/logo.jpg';
 import { PlayCircleTwoTone } from '@ant-design/icons';
+import { get } from '../../api/peticiones';
 
 export default function Home() {
 
@@ -29,6 +30,16 @@ export default function Home() {
       jugador: 'Daisy',
     },
   ];
+
+  // Dentro de tu componente...
+  async function manejarClic() {
+    try {
+      const respuesta = await get('/puntuacion/consultarPuntuacion');
+      console.log(respuesta);
+    } catch (error) {
+      console.error('La petición falló:', error);
+    }
+  }
 
   return (
     <div >
@@ -79,6 +90,9 @@ export default function Home() {
               <div className="ant-component-header" style={{ textAlign: 'center' }}>
                 <Button type="text" shape="round" icon={<PlayCircleTwoTone twoToneColor={"#FF9110"} />} style={{ color: '#FF9110', borderColor: '#FF9110', fontWeight: 'bold' }} >
                   <Link to="/playQuiz">Iniciar Quiz</Link>
+                </Button>
+                <Button onClick={manejarClic}>
+                  Haz clic para hacer una petición
                 </Button>
                 <Col span={24} style={{ marginTop: 20 }}>
                   <Image

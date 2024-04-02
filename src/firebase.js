@@ -20,3 +20,5 @@ const analytics = getAnalytics(app);
 // -- variable auth para la autenticación de usuarios con firebase autentication
 export const auth = getAuth(app);
 
+// Export urlServer
+export const urlServer = 'https://us-central1-triviatrek-187ec.cloudfunctions.net/api';
