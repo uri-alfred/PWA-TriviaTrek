@@ -10,7 +10,7 @@ export function ProtectedRoute({ children }) {
   if (loading) return <Loading />;
 
   //NOTA: descomentar cuando se tenga la sesión implementada
-  //if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/inicioSession" />;
 
   return <NotifiProvider>
   {children}

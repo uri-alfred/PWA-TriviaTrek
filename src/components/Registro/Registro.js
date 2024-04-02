@@ -1,109 +1,95 @@
-import React, {createRef, useState} from 'react';
+import React, { createRef, useState } from 'react';
 import '../../App.css';
-import {Form, Input, Button, Col, Row, Radio, DatePicker, Select, Typography } from 'antd';
-import { Route, Routes } from 'react-router-dom';
+import { Form, Input, Button, Col, Row, Typography, Alert, Image } from 'antd';
+import { useAuth } from '../../context/authContext';
+import { useNavigate } from 'react-router-dom';
 
-import { StyleProvider } from '@ant-design/cssinjs';
-import local from 'antd/es/date-picker/locale/es_ES';
-
-
-
-
-const {Item} = Form;
-const {Password} = Input;
-const {Group} = Radio;
-const {Option} = Select;
-
+const { Item } = Form;
+const { Password } = Input;
+const { Text } = Typography;
 
 export default function Registro() {
-  const { Title, Paragraph, Text, Link } = Typography;
-
-  const [value, setValue] = useState(1);
-
 
   const formRef = createRef();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
+  const { signup } = useAuth();
+  const navigate = useNavigate();
 
-  const formSucces=(datos)=>{
-    console.log("formulario enviado exitosamente", datos);
+  const formSucces = async (datos) => {
+    setLoading(true);
+    setError('');
+    try {
+      await signup(datos.email, datos.confirm, datos.username, null);
+      navigate("/inicioSession");
+    } catch (error) {
+      switch (error.code) {
+        case "auth/invalid-email":
+          setError("El correo que estas ingresando no es valido.");
+          break;
+        case "auth/weak-password":
+          setError("La contraseña debe tener al menos 6 caracteres.");
+          break;
+        case "auth/email-already-in-use":
+          setError("Ya existe una cuenta registrada con ese correo.");
+          break;
+        case "auth/internal-error":
+          setError("Revisa bien los datos ingresados.");
+          break;
+        case "auth/network-request-failed":
+          setError("Error de conexión. Intentelo de nuevo más tarde.");
+          break;
+
+        default:
+          setError(error.message);
+          break;
+      }
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }
-  
-  const formfailed=(error)=>{
+
+  const formfailed = (error) => {
     console.log("error: ", error);
   }
 
-  const onChange = e=>{
-    setValue(e.target.value);
-  }
-
-  const prefixSelector = (
-    <Item name="slectCodigo" noStyle>
-      <Select style={{ width: 80 }} defaultValue="52">
-        <Option value="52">+52</Option>
-        <Option value="53">+53</Option>
-        <Option value="54">+54</Option>
-        <Option value="55">+55</Option>
-        <Option value="56">+56</Option>
-       
-      </Select>
-    </Item>
-  );  
-
-  const borrarCampos = ()=>{
-    formRef.current.resetFields();
-  }
-  const formItemLayout ={
-    labelCol: {
-      xs: {
-        span: 12,
-      },
-      sm: {
-        span: 8,
-      },
-    },
-    wrapperCol: {
-      xs: {
-        span: 44,
-      },
-      sm: {
-        span: 20,
-      },
-    },
-  };
-
-  
   return (
     <div className='full-screen-background' >
       <div >
 
-     
-      <br />    
+        <br />
         <Row>
           <Col xs={1} sm={2} md={6} lg={7}></Col>
           <Col xs={22} sm={20} md={12} lg={10} className='contenedorRegistro'>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop:'10px', paddingBottom:'20px' }}>
-
-              <Text style={{textAlign: 'center', fontSize: 30, fontWeight: 'bold'}}>Registro de Usuario</Text>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Image src='Logo.png' preview={false} />
             </div>
-          
-            <Form name= "formulario" initialValues={{
-                recordar: true,
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '10px', paddingBottom: '20px' }}>
+              <Text style={{ textAlign: 'center', fontSize: 30, fontWeight: 'bold' }}>Registro de Usuario</Text>
+            </div>
+
+            {error &&
+              <div>
+                <Alert message={error} type="error" />
+                <br />
+              </div>
+            }
+
+            <Form
+              name="registro"
+              initialValues={{
+                remember: true,
               }}
               onFinish={formSucces}
               onFinishFailed={formfailed}
+              autoComplete="off"
+              layout="vertical"
               ref={formRef}
-              {...formItemLayout}
             >
-              <Item
-                label="Nombre Usuario"
-                name="username"
-                rules={[{
-                  required: true,
-                  message: "Por favor ingrese su usuario!",
-                }]}
-              >
-                <Input/>
-              </Item>
+
               <Item
                 name="email"
                 label="Correo"
@@ -118,10 +104,20 @@ export default function Registro() {
                   },
                 ]}
               >
-                <Input/>
+                <Input />
               </Item>
-              
-          
+
+              <Item
+                label="Nombre de usuario"
+                name="username"
+                rules={[{
+                  required: true,
+                  message: "Por favor ingrese su usuario!",
+                }]}
+              >
+                <Input />
+              </Item>
+
               <Item
                 name="password"
                 label="Contraseña"
@@ -133,7 +129,7 @@ export default function Registro() {
                 ]}
                 hasFeedback
               >
-                <Password/>
+                <Password />
               </Item>
               <Item
                 name="confirm"
@@ -155,35 +151,22 @@ export default function Registro() {
                   }),
                 ]}
               >
-                <Password/>
-              </Item>
-              
-
-              
-
-              <Item style={{textAlign: 'center'}}>
-                <Button type="primary" htmlType="submit">Registrar Usuario</Button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button htmlType="button" onClick={borrarCampos}>Borrar Campos</Button>
+                <Password />
               </Item>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop:'10px' }}>
-                <Button type="link" href="/">Regresar al inicio</Button>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom:'20px' }}>
+              <Item style={{ textAlign: 'center' }}>
+                <Button className='btn-orange' type="primary" htmlType="submit" loading={loading}>Registrar Usuario</Button>
+              </Item>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '20px' }}>
                 <Button type="link" href="/inicioSession">Iniciar Sesion</Button>
-                
               </div>
-
-              
 
             </Form>
-
           </Col>
-
           <Col xs={22} sm={20} md={12} lg={10}></Col>
         </Row>
-        </div> 
+      </div>
     </div>
   )
 }
