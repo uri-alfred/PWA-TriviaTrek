@@ -77,6 +77,10 @@ self.addEventListener('fetch', event => {
     
     let respuesta;
     // console.log(event.request.url);
+    if ( event.request.url.includes('https://identitytoolkit.googleapis.com/') ) {
+        // post de firebase para el user
+        return fetch(event.request);
+    }
     // Nota:                              cambiar url a firebase
     if ( event.request.url.includes('http://localhost:3001/api/note') ) {
         // console.log('incluye http://localhost:3001/api/note')
