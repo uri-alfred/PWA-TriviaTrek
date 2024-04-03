@@ -14,11 +14,12 @@ export default function Home() {
       try {
         const respuesta = await get('/puntuacion/consultarPuntuacion');
         setDatos(respuesta);
+        console.log(respuesta);
       } catch (error) {
         console.error('La petición falló:', error);
       }
     }
-  
+
     obtenerDatos();
   }, []); // Pasar un array vacío como dependencias para asegurarte de que el efecto solo se ejecuta una vez
 
@@ -67,19 +68,19 @@ export default function Home() {
               </div>
               <Row justify="center" align="bottom">
                 <Col xs={20} sm={7} style={{ textAlign: 'center' }}>
-                  <p>{datos[1].nombre}</p>
+                  <p>{datos && datos[1] && datos[1].nombre}</p>
                   <div style={{ backgroundColor: '#CFCDCA', height: '100px' }}>
                     <h2>2</h2>
                   </div>
                 </Col>
                 <Col xs={20} sm={7} style={{ textAlign: 'center', marginLeft: '10px', marginRight: '10px' }}>
-                  <p>{datos[0].nombre}</p>
+                  <p>{datos && datos[0] && datos[0].nombre}</p>
                   <div style={{ backgroundColor: '#FFCE22', height: '150px' }}>
                     <h2>1</h2>
                   </div>
                 </Col>
                 <Col xs={20} sm={7} style={{ textAlign: 'center' }}>
-                  <p>{datos[2].nombre}</p>
+                  <p>{datos && datos[2] && datos[2].nombre}</p>
                   <div style={{ backgroundColor: '#EE6400', height: '50px' }}>
                     <h2>3</h2>
                   </div>
@@ -87,7 +88,7 @@ export default function Home() {
               </Row>
             </div>
             <List
-              dataSource={datos.slice(3)}
+              dataSource={datos ? datos.slice(3, 10) : []}
               renderItem={(item, index) => (
                 <List.Item>
                   <List.Item.Meta
