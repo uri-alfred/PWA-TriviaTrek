@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
+import { getMessaging } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: "AIzaSyArEJFDnLDCbhFtbsPblHZzoTKgacBO68Q",
@@ -19,6 +20,7 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 // -- variable auth para la autenticación de usuarios con firebase autentication
 export const auth = getAuth(app);
+export const messaging = getMessaging(app);
 
 // Export urlServer
 export const urlServer = 'https://us-central1-triviatrek-187ec.cloudfunctions.net/api';
