@@ -14,7 +14,7 @@ export default function Home() {
       try {
         const respuesta = await get('/puntuacion/consultarPuntuacion');
         setDatos(respuesta);
-        console.log(respuesta);
+        // console.log(respuesta);
       } catch (error) {
         console.error('La petición falló:', error);
       }

@@ -64,7 +64,7 @@ export function AuthProvider({ children }) {
             if (currenUser) {
                 const token = await currenUser.getIdToken();
                 localStorage.setItem("token", token);
-                console.log("token", token);
+                // console.log("token", token);
             } else {
                 localStorage.removeItem("token");
             }
