@@ -9,13 +9,14 @@ import { getDatabase } from "firebase/database";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDk3P6IggPJ6jmSJtCo-g76SD3nzDmHS0E",
-  authDomain: "triviatrek-3b4a7.firebaseapp.com",
-  projectId: "triviatrek-3b4a7",
-  storageBucket: "triviatrek-3b4a7.appspot.com",
-  messagingSenderId: "31031207372",
-  appId: "1:31031207372:web:a7b263affa20b57feae969",
-  measurementId: "G-333WN8Y82F"
+  apiKey: "AIzaSyArEJFDnLDCbhFtbsPblHZzoTKgacBO68Q",
+  authDomain: "triviatrek-187ec.firebaseapp.com",
+  databaseURL: "https://triviatrek-187ec-default-rtdb.firebaseio.com",
+  projectId: "triviatrek-187ec",
+  storageBucket: "triviatrek-187ec.appspot.com",
+  messagingSenderId: "593211191281",
+  appId: "1:593211191281:web:c7708be5233b1a6c1d5e50",
+  measurementId: "G-2GBPGZ5KSY"
 };
 
 // Initialize Firebase
