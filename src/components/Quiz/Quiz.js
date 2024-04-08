@@ -1,5 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
-import { Radio, Space, Button, Flex, Progress } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Flex, Progress, Row, Col } from 'antd';
 import { Card } from 'antd';
 
 import preguntas  from './Preguntas';
@@ -27,22 +27,22 @@ export default function Quiz() {
     setPregunta3(numero === 3);
     setPregunta4(numero === 4);
     
-    console.log("respuesta seleccionada", respuesta);
+   // console.log("respuesta seleccionada", respuesta);
     setRespuestaSeleccionada(respuesta);
     setAccion(true);
   };
 
   const guardarRespuesta = () => {
-    console.log('Respuesta guardada:', respuestaSeleccionada);
+   // console.log('Respuesta guardada:', respuestaSeleccionada);
     setArrayRespuestas(prevArray => [...prevArray, respuestaSeleccionada]);
 
-    console.log('Array de respuestas 1:', arrayRespuestas);
+   // console.log('Array de respuestas 1:', arrayRespuestas);
   };
 
   
   useEffect(() => {
     guardarRespuesta();
-    console.log('respuesta guardada');
+   // console.log('respuesta guardada');
   }, [respuestaSeleccionada]);
 
 
@@ -73,7 +73,7 @@ export default function Quiz() {
 
   const stopGame = () => {
 
-    console.log('****Fin del juego******');
+   // console.log('****Fin del juego******');
     setGameOver(false)
   }
 
@@ -125,9 +125,9 @@ export default function Quiz() {
 
     // Actualizar el estado con las respuestas del usuario
     setRespuestasCorrectasUsuario(respuestasUsuario);
-    console.log("<-score->", scoreFinal);
-    let response = await newScore(scoreFinal, auth.currentUser.uid, auth.currentUser.displayName, auth.currentUser.stsTokenManager.accessToken)
-    console.log("*response*", response)
+   // console.log("<-score->", scoreFinal);
+    /**let response =*/ await newScore(scoreFinal, auth.currentUser.uid, auth.currentUser.displayName)
+   // console.log("*response*", response)
    
   };
 
@@ -138,17 +138,17 @@ export default function Quiz() {
     let stop = true
 
 
-    console.log("indice start", indice);
+   // console.log("indice start", indice);
 
     setTiempoAsignadoU(tiempoAsignado);
     
     if(start){
  
       setLoading(true);
-      console.log('Inicia el juego');
+     // console.log('Inicia el juego');
 
       if (indice === 9 ) {
-        console.log('****Fin del juego******');
+       // console.log('****Fin del juego******');
         stopGame()
         saveScore()
 
@@ -157,8 +157,8 @@ export default function Quiz() {
           const intervalId = setInterval(() => {
             tiempoTranscurrido++;
             if (stop) {
-              console.log('Tiempo transcurrido:', tiempoTranscurrido);
-              console.log("stop", stop)
+             // console.log('Tiempo transcurrido:', tiempoTranscurrido);
+             // console.log("stop", stop)
               setNumeroPregunta(preguntas[indice].numero);
               setContador(tiempoTranscurrido);
               setTituloPregunta(preguntas[indice].pregunta);
@@ -170,9 +170,9 @@ export default function Quiz() {
             if (tiempoTranscurrido >= tiempoAsignado) {
               tiempoTranscurrido = 0;
               reset();
-              indice = indice + 1;
+              indice++;
               setIndice(indice);
-              console.log('indice*', indice);
+             // console.log('indice*', indice);
               if (indice === 9) {
                 stopGame();
                 stop = false;
@@ -180,7 +180,7 @@ export default function Quiz() {
             }
 
             if(indice === 0){
-              console.log("imagen 0")
+             // console.log("imagen 0")
               setLogo(require("../../img/Francia.jpg"))
             }else if(indice === 1){
           
@@ -211,12 +211,12 @@ export default function Quiz() {
       
             if (accion) {
               reset();
-              indice = indice + 1;
+              indice++;
               setAccion(false);
               setIndice(indice);
             }
 
-            console.log("imgSRC", logo);
+           // console.log("imgSRC", logo);
           }, 1000);
           
      
@@ -230,10 +230,10 @@ export default function Quiz() {
     }
     else{
         setLoading(false);
-        console.log('Aun no inicia el juego');
+       // console.log('Aun no inicia el juego');
     }
    
-    console.log("indice 2", indice);
+   // console.log("indice 2", indice);
 
   }, [start, accion]);
 
@@ -242,7 +242,7 @@ export default function Quiz() {
   return (
     <>
     {loading ? 
-     gameOver == true ? (
+     gameOver === true ? (
        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
           <Flex gap="small" wrap="wrap">
             <Progress type="circle" percent={(contador / tiempoAsignadoU) * 100} format={() => `${contador}`} />
@@ -267,24 +267,28 @@ export default function Quiz() {
             <h3 style={{ wordWrap: 'break-word', color: 'white', textAlign: 'center' }}>{tituloPregunta}</h3> 
           </Card>
           
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '90%', maxWidth: '600px', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '50%', paddingRight: '10px' }}>
-              <Button type="primary" danger disabled={pregunta1} onClick={() => seleccionadoRespuesta(respuesta1,1)} style={{ marginBottom: '20px', width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word', backgroundColor: 'rgb(255, 145, 16)' }}>
-                {respuesta1}
-              </Button>
-              <Button type="primary" danger disabled={pregunta2} onClick={() => seleccionadoRespuesta(respuesta2,2)} style={{ width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word', backgroundColor: 'rgb(255, 145, 16)' }}>
-                {respuesta2}
-              </Button>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '50%', paddingLeft: '10px' }}>
-              <Button type="primary" danger disabled={pregunta3} onClick={() => seleccionadoRespuesta(respuesta3,3)} style={{ marginBottom: '20px', width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word', backgroundColor: 'rgb(255, 145, 16)' }}>
-                {respuesta3}
-              </Button>
-              <Button type="primary" danger disabled={pregunta4} onClick={() => seleccionadoRespuesta(respuesta4,4)} style={{ width: '100%', whiteSpace: 'normal', fontSize: '14px', overflowWrap: 'break-word', backgroundColor: 'rgb(255, 145, 16)' }}>
-                {respuesta4}
-              </Button>
-            </div>
-          </div>
+          <Row gutter={[16, 16]} justify="center">
+      <Col xs={24} sm={12}>
+        <Button type="primary" danger disabled={pregunta1} onClick={() => seleccionadoRespuesta(respuesta1, 1)} style={{ width: '100%', fontSize: '14px', backgroundColor: 'rgb(255, 145, 16)' }}>
+          {respuesta1}
+        </Button>
+      </Col>
+      <Col xs={24} sm={12}>
+        <Button type="primary" danger disabled={pregunta2} onClick={() => seleccionadoRespuesta(respuesta2, 2)} style={{ width: '100%', fontSize: '14px', backgroundColor: 'rgb(255, 145, 16)' }}>
+          {respuesta2}
+        </Button>
+      </Col>
+      <Col xs={24} sm={12}>
+        <Button type="primary" danger disabled={pregunta3} onClick={() => seleccionadoRespuesta(respuesta3, 3)} style={{ width: '100%', fontSize: '14px', backgroundColor: 'rgb(255, 145, 16)' }}>
+          {respuesta3}
+        </Button>
+      </Col>
+      <Col xs={24} sm={12}>
+        <Button type="primary" danger disabled={pregunta4} onClick={() => seleccionadoRespuesta(respuesta4, 4)} style={{ width: '100%', fontSize: '14px', backgroundColor: 'rgb(255, 145, 16)' }}>
+          {respuesta4}
+        </Button>
+      </Col>
+    </Row>
             
         </div> ) : 
 

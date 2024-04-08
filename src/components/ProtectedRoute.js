@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import Loading from "./Loading";
-import NotifiProvider from "../context/notificacionesContext";
+// import NotifiProvider from "../context/notificacionesContext";
 
 
 export function ProtectedRoute({ children }) {
@@ -12,7 +12,7 @@ export function ProtectedRoute({ children }) {
   //NOTA: descomentar cuando se tenga la sesión implementada
   if (!user) return <Navigate to="/inicioSession" />;
 
-  return <NotifiProvider>
-  {children}
-  </NotifiProvider>;
+  return <>{children}</>;
+  // <NotifiProvider>
+  // </NotifiProvider>;
 }

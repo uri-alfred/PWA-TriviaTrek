@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect } from 'react';
 import { notification } from 'antd';
 import { getToken, onMessage } from 'firebase/messaging';
 import { messaging } from '../firebase';
-import imgDefecto from '../img/logo.jpg';
+import { useAuth } from './authContext';
 
 const notificaciones = createContext();
 
@@ -16,17 +16,20 @@ export default function NotifiProvider({ children }) {
     const [api, contextHolder] = notification.useNotification({
         stack: 3
     });
+    const { user } = useAuth();
 
     const getTokenNotificacion = async () => {
-        const token = await getToken(messaging, {
-            vapidKey: 'BNfvXutiTWZziOfQ1tIUj07XgZzJNvHglL2LZUBTX3gCZviVdDEU7Ligmz84T35a5o4c9Sol_9m0exxYYjv7EQg'
-        }).catch((error) => console.log('No se pudo obtener el token', error));
+        if (user) {
+            const token = await getToken(messaging, {
+                vapidKey: 'BNfvXutiTWZziOfQ1tIUj07XgZzJNvHglL2LZUBTX3gCZviVdDEU7Ligmz84T35a5o4c9Sol_9m0exxYYjv7EQg'
+            }).catch((error) => console.log('No se pudo obtener el token', error));
 
-        if (token) {
-            console.log(token);
-        } else {
-            console.log('No se pudo obtener el token');
-            console.log('Permiso:', Notification.permission);
+            if (token) {
+                console.log(token);
+            } else {
+                console.log('No se pudo obtener el token');
+                console.log('Permiso:', Notification.permission);
+            }
         }
     };
 
@@ -50,10 +53,13 @@ export default function NotifiProvider({ children }) {
 
     const openNotification = (messaging) => {
         // console.log('Notificación recibida', messaging);
+        const fechaActual = new Date();
+        const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+        const fechaFormateada = fechaActual.toLocaleDateString('es-MX', opciones);
         api.open({
-            message: `${messaging.notification?.title ?? 'Título por defecto'} - ${new Date().toUTCString()}`,
+            message: `${messaging.notification?.title ?? 'Nuevo record!'} - ${fechaFormateada}`,
             description: `${messaging.notification?.body ?? 'Descripción por defecto'}`,
-            icon: <img src={messaging.notification?.image ?? imgDefecto} alt="Notificación" style={{ width: '30px', height: '30px' }} />,
+            icon: <img src={messaging.notification?.icon ?? 'Logo.png'} alt="Notificación" style={{ width: '30px', height: '30px' }} />,
             duration: 5,
             placement: 'bottomRight',
             style: {

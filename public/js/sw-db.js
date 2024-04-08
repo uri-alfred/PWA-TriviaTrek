@@ -1,36 +1,40 @@
 ﻿const db = PouchDB('notas');
 
-function guardarNota(nota) {
-    nota._id = new Date().toISOString();
-    return db.put(nota).then(()=> {
+function guardarPuntuacion(puntuacion) {
+    // console.log("Puntuacion a guardar: ", puntuacion);
+    puntuacion._id = new Date().toISOString();
+    return db.put(puntuacion).then(()=> {
         self.registration.sync.register('nuevo-post');
         const newResp = {ok:true,offline:true};
         return new Response(JSON.stringify(newResp));
     });
 }
 
-function postearNotas() {
+function postearPuntuacion(token) {
     const posteos = [];
-    // console.log('entra a postear notas')
+    // console.log('entra a postear puntuación')
     return db.allDocs({include_docs:true}).then(docs => {
-        // console.log('existen docs');
+        // console.log('existen docs en indexDB');
         docs.rows.forEach(row => {
             const doc = row.doc;
             // console.log('doc: ', doc);
             const data = {
-                title: doc.title,
-                text: doc.text,
+                uid: doc.uid,
+                score: doc.score,
+                nombre: doc.nombre,
+                fecha: doc.fecha,
             }
-
-            const fetchProm = fetch('http://localhost:3001/api/note', {
+            console.log(token);
+            const fetchProm = fetch('https://us-central1-triviatrek-187ec.cloudfunctions.net/api/puntuacion/agregarPuntuacion', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(data)
             }).then(resp => {
                 // console.log('borra el doc de indexDB')
-                console.log('Conexión recuperada, enviando notas al servidor... ', resp.json());
+                console.log('Conexión recuperada, enviando notas al servidor... ');
                 return db.remove(doc);
             });
             posteos.push(fetchProm);
