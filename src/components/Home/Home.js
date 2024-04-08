@@ -23,50 +23,17 @@ export default function Home() {
     obtenerDatos();
   }, []); // Pasar un array vacío como dependencias para asegurarte de que el efecto solo se ejecuta una vez
 
-  // const data = [
-  //   {
-  //     jugador: 'Toad',
-  //   },
-  //   {
-  //     jugador: 'Yoshi',
-  //   },
-  //   {
-  //     jugador: 'Bowser',
-  //   },
-  //   {
-  //     jugador: 'Donkey Kong',
-  //   },
-  //   {
-  //     jugador: 'Wario',
-  //   },
-  //   {
-  //     jugador: 'Waluigi',
-  //   },
-  //   {
-  //     jugador: 'Daisy',
-  //   },
-  // ];
-
-  // Dentro de tu componente...
-  // async function manejarClic() {
-  //   try {
-  //     const respuesta = await get('/puntuacion/consultarPuntuacion');
-  //     console.log(respuesta);
-  //   } catch (error) {
-  //     console.error('La petición falló:', error);
-  //   }
-  // }
 
   return (
     <div >
-      <Row>
-        <Col span={12}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12}>
           <div className="ant-component-wrapper">
             <div className="ant-component" style={{ backgroundColor: '#FFDEB7', marginRight: 20 }}>
               <div className="ant-component-header" style={{ textAlign: 'center' }}>
                 <h1>Clasificación</h1>
               </div>
-              <Row justify="center" align="bottom">
+              <Row gutter={[16, 16]} justify="center" align="bottom">
                 <Col xs={20} sm={7} style={{ textAlign: 'center' }}>
                   <p>{datos && datos[1] && datos[1].nombre}</p>
                   <div style={{ backgroundColor: '#CFCDCA', height: '100px' }}>
@@ -100,7 +67,7 @@ export default function Home() {
             />
           </div>
         </Col>
-        <Col span={12}>
+        <Col xs={24} sm={12}>
           <div className="ant-component-wrapper">
             <div className="ant-component">
               <div className="ant-component-header" style={{ textAlign: 'center' }}>
@@ -114,6 +81,7 @@ export default function Home() {
                   <Image
                     width={'50%'}
                     src={juego}
+                    preview={false}
                   />
                 </Col>
               </div>

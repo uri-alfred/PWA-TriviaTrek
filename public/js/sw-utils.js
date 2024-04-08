@@ -19,21 +19,24 @@ function actualizaCacheStatico(estaticoCache, req, APP_SHELL_INMUTABLE) {
     } else {
         return fetch(req).then(res => {
             return actualizaCacheDinamico(estaticoCache, req, res);
+        }).catch(() => {
+            // console.log("No pudo agregar al dinamico: ", req.url);
+            return;
         });
     }
 }
 
-function manejoApiNotas(cacheName, req) {
+function manejoApiPuntuaciones(cacheName, req) {
 
     if (req.clone().method === 'POST') {
         //ejecutar post
-        console.log('Detecta solicitud POST')
+        console.log('Detecta solicitud POST de Puntuaciones')
         if(self.registration.sync) {
             console.log('Guarda en indexDB')
             return req.clone().text().then(body => {
                 // console.log(body);
                 const bodyObj = JSON.parse(body);
-                return guardarNota(bodyObj);
+                return guardarPuntuacion(bodyObj);
             });
         } else {
             //console.log('deja pasar la solicitud, no acepta sincronos')

@@ -4,12 +4,13 @@ importScripts('js/sw-utils.js')
 importScripts('firebase-messaging-sw.js')
 
 //Crear las variables de cache
-const CACHE_DYNAMIC = 'dynamic-v1' //Para los archivos que se van a descargar
-const CACHE_STATIC = 'static-v1'    //App shell
+const CACHE_DYNAMIC = 'dynamic-V2' //Para los archivos que se van a descargar
+const CACHE_STATIC = 'static-v3'    //App shell
 const CACHE_INMUTABLE = 'inmutable-v1'// CDN de terceros. LIBRERIAS
 
-
 const CACHE_DYNAMIC_LIMIT = 50
+let token = null;
+
 //Funcion para limpiar el cache
 const limpiarCache = (cacheName, numberItem) => {
     caches.open(cacheName)
@@ -29,7 +30,6 @@ self.addEventListener('install', event => {
     const cahePromise = caches.open(CACHE_STATIC).then(cache => {
 
         return cache.addAll([
-
             '/',
             '/index.html',
             '/js/app.js',
@@ -37,6 +37,9 @@ self.addEventListener('install', event => {
             '/js/sw-utils.js',
             '/sw.js',
             '/favico.ico',
+            '/img/offline.gif',
+            '/pages/page-offline.html',
+            '/img/not-found.jpg',
             '/manifest.json',
         ])
     })
@@ -50,7 +53,7 @@ self.addEventListener('install', event => {
         ])
     })
 
-    const instalacion = new Promise((resolve, reject)=> {
+    const instalacion = new Promise((resolve, reject) => {
         // Simular la instalación de caches
         setTimeout(() => {
             //console.log('Instalación terminada')
@@ -59,7 +62,7 @@ self.addEventListener('install', event => {
             resolve()
         }, 1000)
     });
-    
+
     event.waitUntil(Promise.all([cahePromise, caheInmutable, instalacion]))
 });
 
@@ -79,17 +82,13 @@ self.addEventListener('activate', event => {
 })
 
 self.addEventListener('fetch', event => {
-    
+
     let respuesta;
-    // console.log(event.request.url);
-    if ( event.request.url.includes('https://identitytoolkit.googleapis.com/') ) {
+    if (event.request.url.includes('https://identitytoolkit.googleapis.com/') || event.request.url.includes('https://fcmregistrations.googleapis.com/') || event.request.url.includes('https://www.google-analytics.com/')) {
         // post de firebase para el user
         return fetch(event.request);
-    }
-    // Nota:                              cambiar url a firebase
-    if ( event.request.url.includes('http://localhost:3001/api/note') ) {
-        // console.log('incluye http://localhost:3001/api/note')
-        respuesta = manejoApiNotas(CACHE_DYNAMIC, event.request);
+    } else if (event.request.url.includes('https://us-central1-triviatrek-187ec.cloudfunctions.net/api/puntuacion/agregarPuntuacion')) {
+        respuesta = manejoApiPuntuaciones(CACHE_DYNAMIC, event.request);
     } else {
         //Cache with network fallback optimizado
         respuesta = caches.match(event.request).then(res => {
@@ -99,10 +98,20 @@ self.addEventListener('fetch', event => {
                 return res;
             } else {
                 //No existen archivos
-                // console.log(event.request.url)
                 return fetch(event.request).then(newRes => {
                     // Guardar en cache dinamico
                     return actualizaCacheDinamico(CACHE_DYNAMIC, event.request, newRes);
+                }).catch(() => {
+                    // valida si la imagen que no encuentra esta en cache
+                    if (event.request.url.includes('/static/media/')) {
+                        // regresa en su lugar la imagen por default de sin conexión
+                        return caches.match('/img/not-found.jpg');
+                    }
+                    // valida si la solicitud es de algún recurso html
+                    if (event.request.headers.get('accept').includes('text/html')) {
+                        // si no encuentra la pagina devuelve la de offline
+                        return caches.match('/pages/page-offline.html');
+                    }
                 });
             }
         });
@@ -114,8 +123,17 @@ self.addEventListener('fetch', event => {
 //Tareas asincronas
 self.addEventListener('sync', e => {
     console.log('SW: sync');
-    if ( e.tag === 'nuevo-post' ) {
-        const respuesta = postearNotas();
+    if (e.tag === 'nuevo-post') {
+        console.log('detecta nuevo-post');
+        const respuesta = postearPuntuacion(token);
         e.waitUntil(respuesta);
     }
 })
+
+self.addEventListener('message', (event) => {
+    const dataFromApp = event.data.data;
+    if (dataFromApp) {
+        token = dataFromApp;
+    }
+    // console.log("message",dataFromApp);
+});

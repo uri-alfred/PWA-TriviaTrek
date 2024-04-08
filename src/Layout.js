@@ -4,13 +4,12 @@ import { Layout } from 'antd';
 const { Footer } = Layout;
 
 export default function Plantilla2({ children }) {
-    
+
     return (
         <Layout>
-            
-                    {children}
+            {children}
             <Footer style={{ textAlign: 'center' }}>
-                Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                TriviaTrek © {new Date().getFullYear()}
             </Footer>
         </Layout>
     );

@@ -43,7 +43,6 @@ export default function MainLayout() {
                     <Menu
                         theme="light"
                         mode="horizontal"
-                        defaultSelectedKeys={['1']}
                         style={{ flex: 1, minWidth: 0, background: '#FF9110', fontSize: 20, fontWeight: 'bold' }}
                     >
 
@@ -64,11 +63,6 @@ export default function MainLayout() {
                 </div>
             </Header>
             <Content style={{ padding: '0 48px' }}>
-                {/* <Breadcrumb style={{ margin: '16px 0' }}>
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>List</Breadcrumb.Item>
-                    <Breadcrumb.Item>App</Breadcrumb.Item>
-                </Breadcrumb> */}
                 <div
                     style={{
                         background: colorBgContainer,

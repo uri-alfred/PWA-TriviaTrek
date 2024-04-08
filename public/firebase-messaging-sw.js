@@ -21,10 +21,11 @@ const messaging = firebase.messaging(app);
 
 messaging.onBackgroundMessage(payload => {
     // console.log('mensaje recibido', payload)
+    console.log('Recibiendo mensajes en segundo plano');
     const tituloNotificacion = payload.notification.title
     const options = {
         body: payload.notification.body,
-        // icon: '../img/40.png',
+        icon: '/img/ios/40.png',
     }
     self.registration.showNotification(tituloNotificacion, options)
 })

@@ -63,7 +63,13 @@ export function AuthProvider({ children }) {
             setLoading(false);
             if (currenUser) {
                 const token = await currenUser.getIdToken();
-                localStorage.setItem("token", token);
+                if (!localStorage.getItem('token')) {
+                    localStorage.setItem("token", token);
+                }
+                if (navigator.serviceWorker.controller) {
+                    // mandamos el token al SW
+                    navigator.serviceWorker.controller.postMessage({ data: token });
+                }
                 // console.log("token", token);
             } else {
                 localStorage.removeItem("token");
