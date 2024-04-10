@@ -52,7 +52,6 @@ export default function NotifiProvider({ children }) {
     notificarme();
 
     const openNotification = (messaging) => {
-        // console.log('Notificación recibida', messaging);
         const fechaActual = new Date();
         const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
         const fechaFormateada = fechaActual.toLocaleDateString('es-MX', opciones);
