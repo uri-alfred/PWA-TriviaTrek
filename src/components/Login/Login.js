@@ -70,7 +70,7 @@ export default function Login() {
           <Col xs={22} sm={20} md={12} lg={10} className='contenedorRegistro'>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <Image src='Logo.png' preview={false} />
+            <Image rel="preload" width="200" height="200" src='Logo.png' preview={false} alt="" />
           </div>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '10px', paddingBottom: '20px' }}>
