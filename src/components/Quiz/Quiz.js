@@ -27,22 +27,17 @@ export default function Quiz() {
     setPregunta3(numero === 3);
     setPregunta4(numero === 4);
     
-   // console.log("respuesta seleccionada", respuesta);
     setRespuestaSeleccionada(respuesta);
     setAccion(true);
   };
 
   const guardarRespuesta = () => {
-   // console.log('Respuesta guardada:', respuestaSeleccionada);
     setArrayRespuestas(prevArray => [...prevArray, respuestaSeleccionada]);
-
-   // console.log('Array de respuestas 1:', arrayRespuestas);
   };
 
   
   useEffect(() => {
     guardarRespuesta();
-   // console.log('respuesta guardada');
   }, [respuestaSeleccionada]);
 
 
@@ -72,8 +67,6 @@ export default function Quiz() {
 
 
   const stopGame = () => {
-
-   // console.log('****Fin del juego******');
     setGameOver(false)
   }
 
@@ -99,7 +92,7 @@ export default function Quiz() {
       }
     });
     scoreFinal = countCorrecto
-    setScore(countCorrecto); // Suponiendo que setScore es una función válida que establece el puntaje
+    setScore(countCorrecto);
     return respuestas;
   };
   
@@ -125,9 +118,7 @@ export default function Quiz() {
 
     // Actualizar el estado con las respuestas del usuario
     setRespuestasCorrectasUsuario(respuestasUsuario);
-   // console.log("<-score->", scoreFinal);
-    /**let response =*/ await newScore(scoreFinal, auth.currentUser.uid, auth.currentUser.displayName)
-   // console.log("*response*", response)
+    await newScore(scoreFinal, auth.currentUser.uid, auth.currentUser.displayName)
    
   };
 
@@ -137,18 +128,13 @@ export default function Quiz() {
     let tiempoTranscurrido = 0;
     let stop = true
 
-
-   // console.log("indice start", indice);
-
     setTiempoAsignadoU(tiempoAsignado);
     
     if(start){
  
       setLoading(true);
-     // console.log('Inicia el juego');
 
       if (indice === 9 ) {
-       // console.log('****Fin del juego******');
         stopGame()
         saveScore()
 
@@ -157,8 +143,6 @@ export default function Quiz() {
           const intervalId = setInterval(() => {
             tiempoTranscurrido++;
             if (stop) {
-             // console.log('Tiempo transcurrido:', tiempoTranscurrido);
-             // console.log("stop", stop)
               setNumeroPregunta(preguntas[indice].numero);
               setContador(tiempoTranscurrido);
               setTituloPregunta(preguntas[indice].pregunta);
@@ -172,7 +156,6 @@ export default function Quiz() {
               reset();
               indice++;
               setIndice(indice);
-             // console.log('indice*', indice);
               if (indice === 9) {
                 stopGame();
                 stop = false;
@@ -180,7 +163,6 @@ export default function Quiz() {
             }
 
             if(indice === 0){
-             // console.log("imagen 0")
               setLogo(require("../../img/Francia.jpg"))
             }else if(indice === 1){
           
@@ -216,25 +198,19 @@ export default function Quiz() {
               setIndice(indice);
             }
 
-           // console.log("imgSRC", logo);
           }, 1000);
-          
-     
+               
           return () => {
   
             clearInterval(intervalId);
           };
-        }
-      
+        }      
       
     }
     else{
         setLoading(false);
-       // console.log('Aun no inicia el juego');
     }
    
-   // console.log("indice 2", indice);
-
   }, [start, accion]);
 
 
@@ -262,7 +238,7 @@ export default function Quiz() {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
-              <img alt={logo} src={logo} style={{ width: '200px', height: 'auto' }} /> 
+              <img rel="preload" fetchpriority="high" alt={logo} src={logo} style={{ width: '200px', height: 'auto' }} /> 
             </div>
             <h3 style={{ wordWrap: 'break-word', color: 'white', textAlign: 'center' }}>{tituloPregunta}</h3> 
           </Card>

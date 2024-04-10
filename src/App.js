@@ -1,14 +1,15 @@
+import { lazy } from 'react';
 import './App.css';
 import { AuthProvider } from './context/authContext';
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import MainLayout from './components/MainLayout/MainLayout';
 import Home from './components/Home/Home';
 import Quiz from './components/Quiz/Quiz';
 import Login from './components/Login/Login';
 import Registro from './components/Registro/Registro';
-import Layout from './Layout';
 import NotifiProvider from './context/notificacionesContext';
+const MainLayout = lazy(() => import('./components/MainLayout/MainLayout'));
+const Layout = lazy(() => import('./Layout'));
 
 
 function App() {

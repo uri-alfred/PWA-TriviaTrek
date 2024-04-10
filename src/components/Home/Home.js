@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { Col, Row, Avatar, List, Image, Button } from 'antd';
-import juego from '../../img/logo.jpg';
+import juego from '../../img/home.webp';
 import { PlayCircleTwoTone } from '@ant-design/icons';
 import { get } from '../../api/peticiones';
 
@@ -14,15 +14,13 @@ export default function Home() {
       try {
         const respuesta = await get('/puntuacion/consultarPuntuacion');
         setDatos(respuesta);
-        // console.log(respuesta);
       } catch (error) {
         console.error('La petición falló:', error);
       }
     }
 
     obtenerDatos();
-  }, []); // Pasar un array vacío como dependencias para asegurarte de que el efecto solo se ejecuta una vez
-
+  }, []); 
 
   return (
     <div >
@@ -74,12 +72,13 @@ export default function Home() {
                 <Button type="text" shape="round" icon={<PlayCircleTwoTone twoToneColor={"#FF9110"} />} style={{ color: '#FF9110', borderColor: '#FF9110', fontWeight: 'bold' }} >
                   <Link to="/playQuiz">Iniciar Quiz</Link>
                 </Button>
-                {/* <Button onClick={manejarClic}>
-                  Haz clic para hacer una petición
-                </Button> */}
                 <Col span={24} style={{ marginTop: 20 }}>
                   <Image
-                    width={'50%'}
+                  rel='preload'
+                  fetchpriority="high"
+                  alt='Imagen'
+                    width={150}
+                    height={150}
                     src={juego}
                     preview={false}
                   />

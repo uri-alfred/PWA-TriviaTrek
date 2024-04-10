@@ -35,7 +35,7 @@ export default function MainLayout() {
             <Header style={{ display: 'flex', alignItems: 'center', background: '#FF9110', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
 
-                    <Image width={50} alt="" src='Logo.png' preview={false} />
+                    <Image rel="preload" fetchpriority="high"  height={50} width={50} alt="" src='Logo.webp' preview={false} />
 
                     <Menu
                         theme="light"

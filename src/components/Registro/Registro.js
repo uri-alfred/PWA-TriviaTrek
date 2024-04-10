@@ -64,7 +64,7 @@ export default function Registro() {
           <Col xs={22} sm={20} md={12} lg={10} className='contenedorRegistro'>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Image src='Logo.png' preview={false} />
+              <Image rel="preload" fetchpriority="high" alt='' src='Logo.webp' width={200} height={200} preview={false} />
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '10px', paddingBottom: '20px' }}>
