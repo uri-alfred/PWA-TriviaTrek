@@ -70,7 +70,6 @@ export function AuthProvider({ children }) {
                     // mandamos el token al SW
                     navigator.serviceWorker.controller.postMessage({ data: token });
                 }
-                // console.log("token", token);
             } else {
                 localStorage.removeItem("token");
             }

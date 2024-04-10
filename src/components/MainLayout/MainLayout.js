@@ -10,9 +10,6 @@ const { Header, Content } = Layout;
 
 const items = [
     { key: '1', label: 'Home', path: '/' },
-    // { key: '2', label: 'Quiz', path: '/playQuiz' },
-    // { key: '3', label: 'Login', path: '/inicioSession' },
-    // { key: '4', label: 'Registro', path: '/registro' },
 ];
 
 
@@ -38,7 +35,7 @@ export default function MainLayout() {
             <Header style={{ display: 'flex', alignItems: 'center', background: '#FF9110', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
 
-                    <Image width={50} src='Logo.png' preview={false} />
+                    <Image width={50} alt="" src='Logo.png' preview={false} />
 
                     <Menu
                         theme="light"
