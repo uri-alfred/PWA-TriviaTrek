@@ -583,8 +583,8 @@
       "label": "Captura de pantalla de la pantalla de inicio"
     },
     {
-      "src": "img/AppWeb.png",
-      "sizes": "1823x878",
+      "src": "img/AppMobile.png",
+      "sizes": "500x755",
       "type": "image/png",
       "label": "Captura de pantalla de la lista de recursos disponibles"
     }

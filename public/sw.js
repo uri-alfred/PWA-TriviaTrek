@@ -41,12 +41,12 @@ self.addEventListener('install', event => {
             '/img/offline.gif',
             '/img/not-found.jpg',
             '/pages/page-offline.html',
-            '/static/css/main.14cc6c1c.css',
+            '/static/css/main.06e5b410.css',
             '/static/js/bundle.js',
             '/static/js/453.a02c83c6.chunk.js',
-            '/static/js/main.1b13d34b.js',
+            '/static/js/main.01a5dc08.js',
             '/asset-manifest.json',
-            '/Logo.png',
+            '/Logo.webp',
             '/splash-screen.png',
             '/manifest.json',
         ])
@@ -128,7 +128,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(respuesta)
 })
 
-//Tareas asincronas
+//puntuaciones asincronas
 self.addEventListener('sync', e => {
     console.log('SW: sync');
     if (e.tag === 'nuevo-post') {
@@ -143,5 +143,4 @@ self.addEventListener('message', (event) => {
     if (dataFromApp) {
         token = dataFromApp;
     }
-    // console.log("message",dataFromApp);
 });

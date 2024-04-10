@@ -7,7 +7,6 @@ const actualizaCacheDinamico = (dynamicCache, req, res) => {
             return res.clone();
         });
     } else {
-        // error directo del servidor, cuando no existe en cache y tampoco hay internet
         //Si no logra obtener nada, retorna la respuesta original
         return res;
     }
@@ -20,7 +19,6 @@ function actualizaCacheStatico(estaticoCache, req, APP_SHELL_INMUTABLE) {
         return fetch(req).then(res => {
             return actualizaCacheDinamico(estaticoCache, req, res);
         }).catch(() => {
-            // console.log("No pudo agregar al dinamico: ", req.url);
             return;
         });
     }
@@ -34,12 +32,10 @@ function manejoApiPuntuaciones(cacheName, req) {
         if(self.registration.sync) {
             console.log('Guarda en indexDB')
             return req.clone().text().then(body => {
-                // console.log(body);
                 const bodyObj = JSON.parse(body);
                 return guardarPuntuacion(bodyObj);
             });
         } else {
-            //console.log('deja pasar la solicitud, no acepta sincronos')
             return fetch(req);
         }
 

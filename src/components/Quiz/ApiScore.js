@@ -1,5 +1,3 @@
-import React from 'react';
-
 
 function obtenerFechaActual() {
   const now = new Date();
@@ -27,8 +25,8 @@ const newScore = async (score, uuid, displayName) => {
   const response = await fetch(url, config).then(res => res)
     .then(res => {
       console.log('res: ', res);
-    }).catch(err => {
-      //para que no muestre error cuando se queda sin conexión
+    }).catch(() => {
+      //error
     });
   return response;
 };
