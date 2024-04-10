@@ -1,7 +1,6 @@
-﻿const db = PouchDB('notas');
+﻿const db = PouchDB('records');
 
 function guardarPuntuacion(puntuacion) {
-    // console.log("Puntuacion a guardar: ", puntuacion);
     puntuacion._id = new Date().toISOString();
     return db.put(puntuacion).then(()=> {
         self.registration.sync.register('nuevo-post');
@@ -12,12 +11,9 @@ function guardarPuntuacion(puntuacion) {
 
 function postearPuntuacion(token) {
     const posteos = [];
-    // console.log('entra a postear puntuación')
     return db.allDocs({include_docs:true}).then(docs => {
-        // console.log('existen docs en indexDB');
         docs.rows.forEach(row => {
             const doc = row.doc;
-            // console.log('doc: ', doc);
             const data = {
                 uid: doc.uid,
                 score: doc.score,
@@ -33,7 +29,6 @@ function postearPuntuacion(token) {
                 },
                 body: JSON.stringify(data)
             }).then(resp => {
-                // console.log('borra el doc de indexDB')
                 console.log('Conexión recuperada, enviando notas al servidor... ');
                 return db.remove(doc);
             });

@@ -58,7 +58,7 @@ export default function NotifiProvider({ children }) {
         api.open({
             message: `${messaging.notification?.title ?? 'Nuevo record!'} - ${fechaFormateada}`,
             description: `${messaging.notification?.body ?? 'Descripción por defecto'}`,
-            icon: <img src={messaging.notification?.icon ?? 'Logo.png'} alt="Notificación" style={{ width: '30px', height: '30px' }} />,
+            icon: <img rel='preload' fetchPriority='high' src={messaging.notification?.icon ?? 'Logo.webp'} alt="Notificación" style={{ width: '30px', height: '30px' }} />,
             duration: 5,
             placement: 'bottomRight',
             style: {

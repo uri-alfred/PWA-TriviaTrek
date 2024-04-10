@@ -30,7 +30,6 @@ export function AuthProvider({ children }) {
             password
         );
         const user = userCredential.user;
-        // se agrega el nombre y la foto de perfil
         await updateProfile(user, { displayName, photoURL });
         setUser(user);
     };
